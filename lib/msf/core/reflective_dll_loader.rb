@@ -52,6 +52,8 @@ module Msf::ReflectiveDLLLoader
     pe = Rex::PeParsey::Pe.new(Rex::ImageSource::Memory.new(dll))
     offset = nil
 
+    raise 'No exports found. Ensure file is a Reflective DLL' if pe.exports.nil?
+
     pe.exports.entries.each do |e|
       if e.name =~ /^\S*ReflectiveLoader\S*/
         offset = pe.rva_to_file_offset(e.rva)
